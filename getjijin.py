@@ -3,9 +3,6 @@ import re
 from bs4 import BeautifulSoup
 
 def get_html(url):
-    global fenshu
-    global zongjine
-    global chengben
     headers = {
         'User-Agent':'Mozilla/5.0(Macintosh; Intel Mac OS X 10_11_4)\
         AppleWebKit/537.36(KHTML, like Gecko) Chrome/52 .0.2743. 116 Safari/537.36'
@@ -26,27 +23,40 @@ def get_html(url):
     #print(reg)
     if time!= "":
         print("时间2：%s   值2：%s" % (time, val))
-        zongjine = fenshu*float(val) + 20000
-        fenshu = 20000/float(val)+fenshu
-        chengben = chengben + 20000
-    return html                #返回网页源码
+    return str(val)                #返回网页源码
     
     
 
-begintime = 2009
-endtime =  2016
+begintime = 2015
+endtime =  2021
 chengben = 0.0
 zongjine = 0.0
 fenshu = 0.0
+fenshu1 = 0.0
 for i in range(begintime,endtime):
     begintime1 = str(i-1)+"-12-31"
     endtime1 = str(i)+"-01-01"
     aaa = 'http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz&code=%s&sdate=%s&edate=%s&per=40&page=1'
     msg =  aaa %("100032",begintime1,endtime1)
-    soup = BeautifulSoup(get_html(msg), 'lxml')   #初始化BeautifulSoup库,并设置解析器
+    #val = BeautifulSoup(get_html(msg), 'lxml')   #初始化BeautifulSoup库,并设置解析器
+    val = get_html(msg)
+    aaa = 'http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz&code=%s&sdate=%s&edate=%s&per=40&page=1'
+    msg =  aaa %("000834",begintime1,endtime1)
+    val1 = get_html(msg)#, 'lxml')   #初始化BeautifulSoup库,并设置解析器
+    zongjine = fenshu*float(val) +fenshu1*float(val1) + 20000
+    fenshu = zongjine*0.5/float(val)
+    fenshu1 = zongjine*0.5/float(val1)
+    chengben = chengben + 20000
     begintime1 = str(i)+"-06-30"
     endtime1 = str(i)+"-07-01"
     msg =  aaa %("100032",begintime1,endtime1)
-    soup = BeautifulSoup(get_html(msg), 'lxml')   #初始化BeautifulSoup库,并设置解析器
+    val = get_html(msg)#, 'lxml')   #初始化BeautifulSoup库,并设置解析器
+    aaa = 'http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz&code=%s&sdate=%s&edate=%s&per=40&page=1'
+    msg =  aaa %("000834",begintime1,endtime1)
+    val2 = get_html(msg)#, 'lxml')   #初始化BeautifulSoup库,并设置解析器    
+    zongjine = fenshu*float(val) +fenshu1*float(val1) + 20000
+    fenshu = zongjine*0.5/float(val)
+    fenshu1 = zongjine*0.5/float(val1)
+    chengben = chengben + 20000
     print("zongjine：%s   chengben：%s" % (zongjine, chengben))
 
